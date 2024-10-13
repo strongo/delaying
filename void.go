@@ -4,9 +4,9 @@ import (
 	"context"
 )
 
-func VoidWithLog(key string, i any) Function {
+func VoidWithLog(key string, _ any) Delayer {
 	doNothing := func() {}
-	return NewFunction(key, doNothing,
+	return NewDelayer(key, doNothing,
 		func(c context.Context, params Params, args ...interface{}) error {
 			debugf(c, "%s.EnqueueWork(%+v): %+v", key, args, params)
 			return nil
