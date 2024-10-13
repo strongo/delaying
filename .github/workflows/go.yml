@@ -2,26 +2,29 @@ name: Go CI
 
 on:
   push:
-    branches:
-      - main
+    branches-ignore:
+      - renovate/**
     tags:
-      - 'v[0-9]+\.[0-9]+\.[0-9]+'
+      - 'v[0-9]+\.[0-9]+\.[0-9]+' # Push events to matching v*, i.e. v20.15.10
+    paths:
+      - '.github/workflows/**.yml'
+      - '**/go.*'
+      - '**/*.go'
   pull_request:
     branches:
-      - main
+      - '**'
+    paths:
+      - '.github/workflows/**.yml'
+      - '**/go.*'
+      - '**/*.go'
 
 jobs:
 
-  go_ci:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '^1.20'
-
-      - uses: strongo/go-ci-action@v1.1.2
+  strongo_workflow:
+    uses: strongo/go-ci-action/.github/workflows/workflow.yml@main
+    permissions:
+      contents: write
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      code_coverage: false
