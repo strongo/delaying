@@ -2,14 +2,20 @@ package delaying
 
 import "context"
 
-type Logger interface {
-	Debugf(c context.Context, format string, args ...interface{})
+type logger interface {
+	Debugf(c context.Context, format string, args ...any)
 }
 
-var log Logger
+var log logger
 
-func debugf(c context.Context, format string, args ...interface{}) {
+func debugf(c context.Context, format string, args ...any) {
 	if log != nil {
 		log.Debugf(c, format, args...)
 	}
+}
+
+func InitLogger(logger interface {
+	Debugf(c context.Context, format string, args ...any)
+}) {
+	log = logger
 }

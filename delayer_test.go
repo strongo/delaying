@@ -5,18 +5,14 @@ import (
 	"testing"
 )
 
-func TestNewFunction(t *testing.T) {
-	testNewDelayer(t, NewFunction)
-}
-
 func TestNewDelayer(t *testing.T) {
 	testNewDelayer(t, NewDelayer)
 }
 func testNewDelayer(t *testing.T, newDelayer func(
 	id string,
 	implementation any,
-	enqueueWork func(c context.Context, params Params, args ...interface{}) error,
-	enqueueWorkMulti func(c context.Context, params Params, args ...[]interface{}) error,
+	enqueueWork func(c context.Context, params Params, args ...any) error,
+	enqueueWorkMulti func(c context.Context, params Params, args ...[]any) error,
 ) Delayer) {
 	t.Run("EnqueueWork", func(t *testing.T) {
 		var singleArgs []any

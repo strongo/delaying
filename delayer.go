@@ -5,19 +5,18 @@ import "context"
 type Delayer interface {
 	ID() string
 	Implementation() any
-	EnqueueWork(c context.Context, params Params, args ...interface{}) error
-	EnqueueWorkMulti(c context.Context, params Params, args ...[]interface{}) error
+	EnqueueWork(c context.Context, params Params, args ...any) error
+	EnqueueWorkMulti(c context.Context, params Params, args ...[]any) error
 }
 
-// Deprecated: Use Delayer instead.
-type Function = Delayer
+//type Function = Delayer // Deprecated: Use Delayer instead.
 
 // NewDelayer creates a new Delayer.
 func NewDelayer(
 	id string,
 	implementation any,
-	enqueueWork func(c context.Context, params Params, args ...interface{}) error,
-	enqueueWorkMulti func(c context.Context, params Params, args ...[]interface{}) error,
+	enqueueWork func(c context.Context, params Params, args ...any) error,
+	enqueueWorkMulti func(c context.Context, params Params, args ...[]any) error,
 ) Delayer {
 	if implementation == nil {
 		panic("implementation is nil")
@@ -36,14 +35,13 @@ func NewDelayer(
 	}
 }
 
-// Deprecated: Use NewDelayer instead.
-var NewFunction = NewDelayer
+// var NewFunction = NewDelayer // Deprecated: Use NewDelayer instead.
 
 type delayer struct {
 	id               string
 	implementation   any
-	enqueueWork      func(c context.Context, params Params, args ...interface{}) error
-	enqueueWorkMulti func(c context.Context, params Params, args ...[]interface{}) error
+	enqueueWork      func(c context.Context, params Params, args ...any) error
+	enqueueWorkMulti func(c context.Context, params Params, args ...[]any) error
 }
 
 func (f delayer) ID() string {
@@ -54,10 +52,10 @@ func (f delayer) Implementation() any {
 	return f.implementation
 }
 
-func (f delayer) EnqueueWork(c context.Context, params Params, args ...interface{}) error {
+func (f delayer) EnqueueWork(c context.Context, params Params, args ...any) error {
 	return f.enqueueWork(c, params, args...)
 }
 
-func (f delayer) EnqueueWorkMulti(c context.Context, params Params, args ...[]interface{}) error {
+func (f delayer) EnqueueWorkMulti(c context.Context, params Params, args ...[]any) error {
 	return f.enqueueWorkMulti(c, params, args...)
 }

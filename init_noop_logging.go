@@ -20,10 +20,10 @@ func (n noOpFunction) Implementation() any {
 	panic("implement me") //TODO implement me
 }
 
-func (n noOpFunction) EnqueueWork(_ context.Context, _ Params, _ ...interface{}) error {
+func (n noOpFunction) EnqueueWork(_ context.Context, _ Params, _ ...any) error {
 	panic("implement me") //TODO implement me
 }
 
-func (n noOpFunction) EnqueueWorkMulti(_ context.Context, _ Params, _ ...[]interface{}) error {
+func (n noOpFunction) EnqueueWorkMulti(_ context.Context, _ Params, _ ...[]any) error {
 	panic("implement me") //TODO implement me
 }
