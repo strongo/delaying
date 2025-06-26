@@ -55,9 +55,10 @@ func executeWorkerWithDelay(worker any, params Params, args []any) {
 
 	// Execute the worker with reflection
 	workerValue := reflect.ValueOf(worker)
-	reflectArgs := make([]reflect.Value, len(args))
+	reflectArgs := make([]reflect.Value, len(args)+1)
+	reflectArgs[0] = reflect.ValueOf(context.Background())
 	for i, arg := range args {
-		reflectArgs[i] = reflect.ValueOf(arg)
+		reflectArgs[i+1] = reflect.ValueOf(arg)
 	}
 	workerValue.Call(reflectArgs)
 }

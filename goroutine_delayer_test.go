@@ -113,7 +113,7 @@ func TestGoRoutineWithLog(t *testing.T) {
 		var receivedArgs []any
 
 		// Create a worker function that captures the arguments it was called with
-		worker := func(arg1 string, arg2 int, arg3 bool) {
+		worker := func(ctx context.Context, arg1 string, arg2 int, arg3 bool) {
 			receivedArgs = []any{arg1, arg2, arg3}
 			done <- true
 		}
@@ -149,8 +149,8 @@ func TestGoRoutineWithLog(t *testing.T) {
 		var wg sync.WaitGroup
 		wg.Add(2)
 
-		// Test with a worker that takes no arguments
-		noArgsWorker := func() {
+		// Test with a worker that takes only context argument
+		noArgsWorker := func(ctx context.Context) {
 			wg.Done()
 		}
 		noArgsDelayer := GoRoutineWithLog("no-args", noArgsWorker)
@@ -159,8 +159,8 @@ func TestGoRoutineWithLog(t *testing.T) {
 			t.Fatalf("EnqueueWork returned an error: %v", err)
 		}
 
-		// Test with a worker that takes a single argument
-		singleArgWorker := func(arg string) {
+		// Test with a worker that takes context and a single argument
+		singleArgWorker := func(ctx context.Context, arg string) {
 			if arg != "hello" {
 				t.Errorf("Expected argument to be 'hello', got '%s'", arg)
 			}
@@ -188,8 +188,8 @@ func TestGoRoutineWithLog(t *testing.T) {
 	})
 
 	t.Run("handles EnqueueWorkMulti", func(t *testing.T) {
-		// Create a worker that takes a string argument
-		worker := func(arg string) {}
+		// Create a worker that takes context and a string argument
+		worker := func(ctx context.Context, arg string) {}
 		delayer := GoRoutineWithLog("multi-test", worker)
 
 		// EnqueueWorkMulti should not panic
@@ -210,8 +210,8 @@ func TestGoRoutineWithLog(t *testing.T) {
 		// Create a channel to signal when the worker has been called
 		done := make(chan string)
 
-		// Create a worker function that takes a string argument
-		worker := func(arg string) {
+		// Create a worker function that takes context and a string argument
+		worker := func(ctx context.Context, arg string) {
 			done <- arg
 		}
 
@@ -276,8 +276,8 @@ func TestGoRoutineWithLog(t *testing.T) {
 		}
 		done := make(chan workerArgs)
 
-		// Create a worker function that takes three arguments (string, int, bool)
-		worker := func(s string, i int, b bool) {
+		// Create a worker function that takes context and three arguments (string, int, bool)
+		worker := func(ctx context.Context, s string, i int, b bool) {
 			done <- workerArgs{s, i, b}
 		}
 
@@ -339,7 +339,7 @@ func TestGoRoutineWithLog(t *testing.T) {
 	})
 
 	t.Run("returns correct ID and Implementation", func(t *testing.T) {
-		worker := func() {}
+		worker := func(ctx context.Context) {}
 		key := "test-key"
 		delayer := GoRoutineWithLog(key, worker)
 
