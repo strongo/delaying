@@ -1,3 +1,3 @@
 module github.com/strongo/delaying
 
-go 1.18
+go 1.27.0
