@@ -10,6 +10,9 @@ func TestVoid(t *testing.T) {
 	if f == nil {
 		t.Fatal("VoidWithLog() returned nil")
 	}
+	// Invoke doNothing function
+	f.Implementation().(func())()
+
 	t.Run("EnqueueWork", func(t *testing.T) {
 		if err := f.EnqueueWork(context.Background(), params{queue: "queue1"}, 1, 2, 3); err != nil {
 			t.Errorf("EnqueueWork() returned unexpcted error: = %v", err)

@@ -26,4 +26,13 @@ func TestInit(t *testing.T) {
 		t.Fatal("called is false")
 	}
 	registerDelayedFunc = nil
+
+	t.Run("nil_panics", func(t *testing.T) {
+		defer func() {
+			if r := recover(); r == nil {
+				t.Fatal("expected panic on Init(nil)")
+			}
+		}()
+		Init(nil)
+	})
 }

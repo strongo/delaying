@@ -36,6 +36,15 @@ func TestWith(t *testing.T) {
 				if p != tt.want {
 					t.Errorf("With() = %v, want %v", p, tt.want)
 				}
+				if p.Queue() != tt.want.Queue() {
+					t.Errorf("Queue() = %v, want %v", p.Queue(), tt.want.Queue())
+				}
+				if p.Path() != tt.want.Path() {
+					t.Errorf("Path() = %v, want %v", p.Path(), tt.want.Path())
+				}
+				if p.Delay() != tt.want.Delay() {
+					t.Errorf("Delay() = %v, want %v", p.Delay(), tt.want.Delay())
+				}
 			}
 		})
 	}

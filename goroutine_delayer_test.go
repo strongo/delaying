@@ -354,3 +354,23 @@ func TestGoRoutineWithLog(t *testing.T) {
 		}
 	})
 }
+
+func TestExecuteWorkerWithDelay(t *testing.T) {
+	orig := timeSleep
+	defer func() { timeSleep = orig }()
+	var slept time.Duration
+	timeSleep = func(d time.Duration) { slept = d }
+
+	var called bool
+	worker := func(ctx context.Context, s string) {
+		called = true
+	}
+	executeWorkerWithDelay(worker, With("q", "p", 5*time.Second), []any{"test"})
+	if !called {
+		t.Fatal("worker not called")
+	}
+	if slept == 0 {
+		t.Fatal("expected sleep to be called")
+	}
+}
+

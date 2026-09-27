@@ -27,6 +27,12 @@ func testNewDelayer(t *testing.T, newDelayer func(
 		if f == nil {
 			t.Fatal("f is nil")
 		}
+		if f.ID() != "EnqueueWorkTest" {
+			t.Fatalf("unexpected ID: %s", f.ID())
+		}
+		if f.Implementation() == nil {
+			t.Fatal("implementation is nil")
+		}
 		if singleArgs != nil {
 			t.Fatal("singleArgs is not nil")
 		}
@@ -46,6 +52,22 @@ func testNewDelayer(t *testing.T, newDelayer func(
 			}
 		}
 
+	})
+	t.Run("panics_on_nil", func(t *testing.T) {
+		assertPanic := func(fn func()) {
+			defer func() {
+				if r := recover(); r == nil {
+					t.Fatal("expected panic")
+				}
+			}()
+			fn()
+		}
+		dummyWork := func(c context.Context, params Params, args ...any) error { return nil }
+		dummyMulti := func(c context.Context, params Params, args ...[]any) error { return nil }
+
+		assertPanic(func() { NewDelayer("id", nil, dummyWork, dummyMulti) })
+		assertPanic(func() { NewDelayer("id", func() {}, nil, dummyMulti) })
+		assertPanic(func() { NewDelayer("id", func() {}, dummyWork, nil) })
 	})
 	t.Run("EnqueueWorkMulti", func(t *testing.T) {
 		var multiArgs [][]any
